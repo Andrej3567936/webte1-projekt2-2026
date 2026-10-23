@@ -1,3 +1,15 @@
+const RESTAURANTS = [
+    {
+        name: "Eat & Meet",
+        url: "https://eatandmeet.sk/tyzdenne-menu",
+        address: "Staré Grunty 36, Bratislava",
+        localFile: "local/eatnmeet.html",
+        parse: parseEatAndMeet //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
+        //je to len odkaz na funkciu 
+    }
+]
+
+
 async function loadDocument(url) {
     const response = await fetch(url); //fetch posle http pozioadavku na adresu, kym neodpovie tak caka, stranka zatial bezi nrmalne (asynchronnost) a ked odpovie tak sa ulozi do response
     //fetch vracia promise, await pocka na vysledok
@@ -23,13 +35,31 @@ function renderDay(items, day) {
 
 }
 
+function renderCard(restaurant, items, day) {
+    const col = $("<div class='col-md-6'></div>");
+    const card = $("<div class='card h-100'></div>");
+
+    const header = $("<div class='card-header'></div>");
+    const link = $("<a target='blank' rel='noopener'></a>");
+    link.attr("href", restaurant.url).text(restaurant.name);
+
+    header.append($("<h2 class='h5 mb-0'></h2>").append(link));
+    header.append($("<small class='text-body-secondary'></small>").text(restaurant.address));
+
+    card.append(header, renderDay(items, day));
+    col.append(card);
+    return col;
+}
+
+
 
 async function test() {
-    const doc = await loadDocument("../local/eatnmeet.html"); //musi byt await lebo bez toho by vratil promise
+    const restaurant = RESTAURANTS[0];
+    const doc = await loadDocument(restaurant.localFile); //musi byt await lebo bez toho by vratil promise
     //console.log(parseEatAndMeet(doc));
+    const items = restaurant.parse(doc);
 
-    const items = parseEatAndMeet(doc);
-    $("#menu").append(renderDay(items, "Pondelok"));
+    $("#menu").append(renderCard(restaurant, items, "Pondelok"));
 }
 
 test();
