@@ -85,16 +85,34 @@ function renderCard(restaurant, items, day) {
 
 const menuData = {}; //tutok sa budu ukladat uz nacitane jedla z jednotlivych restik, kluc bude nazov restiky
 
-function showDay(day) { //vykreslenie jdneho dna
-    $("#menu").empty(); //vycisti obsah menu
-  
-    RESTAURANTS.forEach(function (restaurant) {
+function addDay(day) { //vykresli den do menu
+    RESTAURANTS.forEach(function (restaurant) { //prejde vsetky restiky
         const items = menuData[restaurant.name];
         if (items) {
-            $("#menu").append(renderCard(restaurant, items, day));
+            $("#menu").append(renderCard(restaurant, items, day)); //prida do menu vykresleny card
         }
     });
 }
+
+function showDay(day) { //vykreslenie jdneho dna
+    $("#menu").empty(); //vycisti obsah menu
+    addDay(day);
+}
+
+
+//CELY MF TYZDEN BUG Boy
+
+function showWeek() {
+    $("#menu").empty(); //vycisti obsah menu
+
+    DAYS.forEach(function (day) { //prejde vsetky dni
+        $("#menu").append($("<h2 class='h4 col-12 mt-4'></h2>").text(day)); //prida do menu nadpis s dnom
+        addDay(day); //prida do menu jedla pre dany den
+    });
+}
+
+
+
 
 async function loadAll() {
     for (const restaurant of RESTAURANTS) { //preco som nedal ze forEach? Lebo forEach nefunguje s await (by nepockalo), for of funguje
@@ -113,7 +131,12 @@ $("#day-tabs button").on("click", function () { //pridanie event listenera na kl
     $(this).addClass("active"); //prida active class na button na ktory si klikol
 
     const day = $(this).data("day");
-    showDay(DAYS[day-1]); //vykresli den na ktory si klikol
+
+    if (day === "week") {
+        showWeek(); //vykresli cely tyzden
+    } else {    
+        showDay(DAYS[day-1]); //vykresli den na ktory si klikol
+    }
 
 
 });
