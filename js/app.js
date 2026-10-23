@@ -35,7 +35,9 @@ async function loadDocument(url) {
 }
 
 
-
+$("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
+    selectDay($("#day-tabs button.active").data("day")); // prekreslí aktuálne vybraný deň
+});
 
 
 
@@ -108,12 +110,18 @@ function renderCard(restaurant, items, day) {
 
 
 
+function selectedNames() { // vráti pole názvov zaškrtnutých reštaurácií
+    return $("#restaurant-filter input:checked").map(function () {
+        return this.value;
+    }).get();
+}
+
 const menuData = {}; //tutok sa budu ukladat uz nacitane jedla z jednotlivych restik, kluc bude nazov restiky
 
 function addDay(day) { //vykresli den do menu
     RESTAURANTS.forEach(function (restaurant) { //prejde vsetky restiky
         const items = menuData[restaurant.name];
-        if (items) {
+        if (items && selectedNames().includes(restaurant.name)) { // vykreslí len zaškrtnuté
             $("#menu").append(renderCard(restaurant, items, day)); //prida do menu vykresleny card
         }
     });
@@ -157,6 +165,23 @@ async function loadAll() {
 }
 
 loadAll();
+
+
+
+//CHECKBOXESSS
+RESTAURANTS.forEach(function (restaurant) { // pre každú reštauráciu jedno políčko
+    const label = $("<label class='d-flex align-items-center gap-2'></label>");
+    const checkbox = $("<input type='checkbox' class='form-check-input m-0' checked>").val(restaurant.name);
+
+    label.append(checkbox, $("<span></span>").text(restaurant.name));
+    $("#restaurant-filter").append(label);
+});
+
+$("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
+    selectDay($("#day-tabs button.active").data("day")); // prekreslí aktuálne vybraný deň
+});
+
+
 
 
 $("#day-tabs button").on("click", function () { //pridanie event listenera na kliknutie na buttony
