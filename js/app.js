@@ -83,13 +83,37 @@ function renderCard(restaurant, items, day) {
 
 
 
-async function test() {
-    const restaurant = RESTAURANTS[0];
-    const doc = await loadDocument(restaurant.localFile); //musi byt await lebo bez toho by vratil promise
-    //console.log(parseEatAndMeet(doc));
-    const items = restaurant.parse(doc); //pole objektov jedal, ktore sa naparsovali
+const menuData = {}; //tutok sa budu ukladat uz nacitane jedla z jednotlivych restik, kluc bude nazov restiky
 
-    $("#menu").append(renderCard(restaurant, items, "Pondelok"));
+function showDay(day) { //vykreslenie jdneho dna
+    $("#menu").empty(); //vycisti obsah menu
+  
+    RESTAURANTS.forEach(function (restaurant) {
+        const items = menuData[restaurant.name];
+        if (items) {
+            $("#menu").append(renderCard(restaurant, items, day));
+        }
+    });
 }
 
-test();
+async function loadAll() {
+    for (const restaurant of RESTAURANTS) { //preco som nedal ze forEach? Lebo forEach nefunguje s await (by nepockalo), for of funguje
+        const doc = await loadDocument(restaurant.localFile); //nacita lokalny subor do doc
+        menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
+    }
+    showDay("Pondelok"); //po nacitani vsetkych dat vykresli pondelok
+}
+
+loadAll();
+
+
+$("#day-tabs button").on("click", function () { //pridanie event listenera na kliknutie na buttony
+    // najde vsetky buttony v daytabs classe,  ak na jedenn kliknes, stane sa click event a zavola sa tato funkcia
+    $("#day-tabs button").removeClass("active"); //odstrani active class zo vsetkych buttonov
+    $(this).addClass("active"); //prida active class na button na ktory si klikol
+
+    const day = $(this).data("day");
+    showDay(DAYS[day-1]); //vykresli den na ktory si klikol
+
+
+});
