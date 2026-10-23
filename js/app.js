@@ -6,6 +6,21 @@ const RESTAURANTS = [
         localFile: "local/eatnmeet.html",
         parse: parseEatAndMeet //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
         //je to len odkaz na funkciu 
+    },
+
+    {   name: "Slovak Pub",
+        url: "https://slovakpub.sk/denne-menu/",
+        address: "Obchodná 62, Bratislava",
+        localFile: "local/slovakpub.html",
+        parse: parseSlovakPub
+    },
+
+    {
+        name: "White Dragon",
+        url: "https://whitedragon.sk/menucka/",
+        address: "Staré Grunty 18, Bratislava",
+        localFile: "local/whitedragon.html",
+        parse: parseWhiteDragon
     }
 ]
 
@@ -36,7 +51,7 @@ function renderDay(items, day) {
         const row = $("<li class='list-group-item d-flex justify-content-between gap-2'></li>");
 
         const info = $("<div></div>"); //prazdny div element info (bude tu nazov asi)
-        const isSoup = item.type.startsWith("Polievka"); //vrati true ak sa string zacina na polievka
+        const isSoup = item.type.toLowerCase().includes("polievka"); //vrati true ak ma div slovo polievka
         const badge = $("<span class='badge me-2'></span>").addClass(isSoup ? "text-bg-warning" : "text-bg-secondary").text(item.type); 
         const name = $("<span></span>").text(item.name);
 
@@ -66,7 +81,7 @@ function renderDay(items, day) {
 
 
 function renderCard(restaurant, items, day) {
-    const col = $("<div class='col-md-6'></div>");
+    const col = $("<div class='col-12 col-md-6 col-lg-4'></div>");
     const card = $("<div class='card h-100'></div>");
 
     const header = $("<div class='card-header'></div>");
