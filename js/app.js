@@ -111,7 +111,16 @@ function showWeek() {
     });
 }
 
+function selectDay(day) {
+    $("#day-tabs button").removeClass("active");
+    $("#day-tabs button[data-day='" + day + "']").addClass("active"); //prida active class na button na ktory si klikol
 
+    if (day === "week") {
+        showWeek(); //vykresli cely tyzden
+    } else {
+        showDay(DAYS[day - 1]); //vykresli den na ktory si klikol
+    }
+}
 
 
 async function loadAll() {
@@ -119,24 +128,26 @@ async function loadAll() {
         const doc = await loadDocument(restaurant.localFile); //nacita lokalny subor do doc
         menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
     }
-    showDay("Pondelok"); //po nacitani vsetkych dat vykresli pondelok
+    showToday(); //po nacitani vsetkych dat vykresli pondelok
 }
 
 loadAll();
 
 
 $("#day-tabs button").on("click", function () { //pridanie event listenera na kliknutie na buttony
-    // najde vsetky buttony v daytabs classe,  ak na jedenn kliknes, stane sa click event a zavola sa tato funkcia
-    $("#day-tabs button").removeClass("active"); //odstrani active class zo vsetkych buttonov
-    $(this).addClass("active"); //prida active class na button na ktory si klikol
-
-    const day = $(this).data("day");
-
-    if (day === "week") {
-        showWeek(); //vykresli cely tyzden
-    } else {    
-        showDay(DAYS[day-1]); //vykresli den na ktory si klikol
-    }
-
-
+    selectDay($(this).data("day")); //zisti na ktory button si klikol a zavola selectDay s danym dnom
 });
+
+
+function showToday() {
+    const dayNumber = new Date().getDay(); //vrati cislo dna v tyzdni (0-6) 0 je nedela, 1 je pondelok, 2 utorok, 3 streda, 4 stvrtok, 5 piatok, 6 sobota
+    if (dayNumber === 0 || dayNumber === 6) { //ak je sobota alebo nedela
+        
+        $("#weekend-msg").removeClass("d-none");
+        selectDay(1); //vykresli pondelok
+    } else {
+       
+        $("#weekend-msg").addClass("d-none");
+        selectDay(dayNumber); //vykresli dany den
+    }
+}
