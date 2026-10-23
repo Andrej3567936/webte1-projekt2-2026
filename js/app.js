@@ -4,8 +4,9 @@ const RESTAURANTS = [
         url: "https://eatandmeet.sk/tyzdenne-menu",
         address: "Staré Grunty 36, Bratislava",
         localFile: "local/eatnmeet.html",
-        parse: parseEatAndMeet //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
+        parse: parseEatAndMeet, //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
         //je to len odkaz na funkciu 
+        note: "Cena s dotáciou" // poznámka v pätičke karty
     },
 
     {   name: "Slovak Pub",
@@ -61,7 +62,12 @@ function renderDay(items, day) {
             info.append($("<small class='d-block text-body-secondary'></small>").text("Alergény: " + item.allergens));
         }
 
-        const price = $("<strong class='text-nowrap'></strong>").text(item.price);
+        const price = $("<div class='text-end text-nowrap'></div>"); // pravý stĺpec: normálna cena + ISIC pod ňou
+        price.append($("<strong></strong>").text(item.price));
+
+        if (item.priceISIC && item.priceISIC !== item.price) { // len ak existuje a líši sa od normálnej
+            price.append($("<small class='d-block text-info'></small>").text(item.priceISIC));
+        }
 
         row.append(info, price);
         list.append(row);
@@ -92,6 +98,10 @@ function renderCard(restaurant, items, day) {
     header.append($("<small class='text-body-secondary'></small>").text(restaurant.address));
 
     card.append(header, renderDay(items, day));
+
+    if (restaurant.note) { // poznámka sa zobrazí len reštauráciám, ktoré ju majú
+        card.append($("<div class='card-footer small text-info'></div>").text(restaurant.note));
+    }
     col.append(card);
     return col;
 }

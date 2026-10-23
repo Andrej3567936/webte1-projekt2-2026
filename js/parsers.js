@@ -75,7 +75,7 @@ function parseSlovakPub(doc) {
             const allergens = parts[1] || "";
 
             const priceElement = card.querySelector(".weekly-menu-price");
-            const price = priceElement ? priceElement.textContent.trim() : "";
+            const price = priceElement ? priceElement.textContent.trim().replace("€", " €") : ""; // pridá medzeru pred €
 
             items.push({
                 restaurant: "Slovak Pub",
