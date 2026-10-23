@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="sk" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where2Eat | Obedové menu v okolí FEI</title>
+    <meta name="descripti                  on" content="Denné menu reštaurácií v okolí FEI STU na jednom mieste.">
+    <link rel="icon" type="image/png" href="favicon_p.png">
+
+    <!-- Bootstrap (CSS knižnica) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- vlastné štýly až po Bootstrape, aby ich mohli prepísať -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <!-- navbar-expand-md: na mobile sa menu zbalí do hamburgera -->
+        <nav class="navbar navbar-expand-md bg-body-tertiary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Where2Eat</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#main-nav" aria-controls="main-nav"
+                        aria-expanded="false" aria-label="Zobraziť menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="main-nav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" href="index.html">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link" href="docs/about_project.html">O projekte</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-4">
+        <h1 class="h2 mb-3">Obedové menu v okolí fakulty</h1>
+
+        <!-- tlačidlá na obnovu a vymazanie dát -->
+        <section class="mb-3 d-flex flex-wrap gap-2" aria-label="Ovládanie dát">
+            <button type="button" class="btn btn-primary" id="btn-update">Aktualizovať menu</button>
+            <button type="button" class="btn btn-outline-danger" id="btn-clear">Vymazať uložené dáta</button>
+        </section>
+
+        <!-- výber dňa (JS prepína triedu active) -->
+        <nav aria-label="Výber dňa" class="mb-3">
+            <ul class="nav nav-pills flex-wrap gap-1" id="day-tabs">
+                <li class="nav-item"><button type="button" class="nav-link" data-day="1">Pondelok</button></li>
+                <li class="nav-item"><button type="button" class="nav-link" data-day="2">Utorok</button></li>
+                <li class="nav-item"><button type="button" class="nav-link" data-day="3">Streda</button></li>
+                <li class="nav-item"><button type="button" class="nav-link" data-day="4">Štvrtok</button></li>
+                <li class="nav-item"><button type="button" class="nav-link" data-day="5">Piatok</button></li>
+                <li class="nav-item"><button type="button" class="nav-link" data-day="week">Celý týždeň</button></li>
+            </ul>
+        </nav>
+
+        <!-- filter reštaurácií (zaškrtávacie políčka doplní JS) -->
+        <fieldset class="mb-4">
+            <legend class="fs-6">Zobraziť reštaurácie:</legend>
+            <div id="restaurant-filter" class="d-flex flex-wrap gap-3"></div>
+        </fieldset>
+
+        <!-- indikátor načítavania; d-none = skryté -->
+        <div id="loading" class="text-center my-5 d-none">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Načítavam…</span>
+            </div>
+            <p class="mt-2">Načítavam menu…</p>
+        </div>
+
+        <!-- sem JS vykreslí karty reštaurácií --> 
+        <section id="menu" class="row g-4" aria-live="polite"></section>
+    </main>
+
+    <footer class="bg-body-tertiary py-3 mt-5">
+        <div class="container text-center small">
+            <p class="mb-1">&copy; 2026 Andrej Hudačko</p>
+            <p class="mb-0">Použité knižnice: Bootstrap 5.3.3, jQuery 3.7.1 | Dáta: weby reštaurácií</p>
+        </div>
+    </footer>
+
+    <!-- jQuery a Bootstrap (JS) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- vlastný kód; poradie: parsery, ukladanie, hlavná logika -->
+    <script src="js/parsers.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
