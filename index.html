@@ -49,8 +49,6 @@
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#main-nav"
-
-            
           >
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -84,10 +82,10 @@
       </section>
 
       <!-- výber dňa (JS prepína triedu active) -->
-      <nav  class="mb-3">
+      <nav class="mb-3">
         <ul class="nav nav-pills flex-wrap gap-1" id="day-tabs">
           <li class="nav-item">
-            <button type="button" class="nav-link" data-day="1"> Pondelok</button>
+            <button type="button" class="nav-link" data-day="1">Pondelok</button>
           </li>
           <li class="nav-item">
             <button type="button" class="nav-link" data-day="2">Utorok</button>
@@ -102,9 +100,7 @@
             <button type="button" class="nav-link" data-day="5">Piatok</button>
           </li>
           <li class="nav-item">
-            <button type="button" class="nav-link" data-day="week">
-              Celý týždeň
-            </button>
+            <button type="button" class="nav-link" data-day="week"> Celý týždeň</button>
           </li>
         </ul>
       </nav>
@@ -115,7 +111,9 @@
         <div id="restaurant-filter" class="d-flex flex-wrap gap-3"></div>
       </fieldset>
 
-      <p id="weekend-msg" class="alert alert-info d-none"> Cez víkend menu nie je k dispozícii, zobrazený je pondelok.</p>
+      <p id="weekend-msg" class="alert alert-info d-none">
+        Cez víkend menu nie je k dispozícii, zobrazený je pondelok.
+      </p>
       <!-- indikátor načítavania; d-none = skryté -->
       <div id="loading" class="text-center my-5 d-none">
         <div class="spinner-border" role="status">

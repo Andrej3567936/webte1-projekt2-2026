@@ -24,7 +24,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
         name: "Eat & Meet",
         url: "https://eatandmeet.sk/tyzdenne-menu",
         address: "Staré Grunty 36, Bratislava",
-        localFile: "local/eatnmeet.html",
+        localFile: "../local/eatnmeet.html",
         parse: parseEatAndMeet, //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
         //je to len odkaz na funkciu 
         note: "Cena s dotáciou" // poznámka v pätičke karty
@@ -33,7 +33,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
     {   name: "Slovak Pub",
         url: "https://slovakpub.sk/denne-menu/",
         address: "Obchodná 62, Bratislava",
-        localFile: "local/slovakpub.html",
+        localFile: "../local/slovakpub.html",
         parse: parseSlovakPub
     },
 
@@ -41,7 +41,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
         name: "White Dragon",
         url: "https://whitedragon.sk/menucka/",
         address: "Staré Grunty 18, Bratislava",
-        localFile: "local/whitedragon.html",
+        localFile: "../local/whitedragon.html",
         parse: parseWhiteDragon
     }
 ]
@@ -55,6 +55,9 @@ async function loadDocument(url) {
     return new DOMParser().parseFromString(html, 'text/html'); //dom parser toto html prevedie z textu na strom kde uz hladame s tym queryselector
 }
 
+$("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
+    selectDay($("#day-tabs button.active").data("day")); // prekreslí aktuálne vybraný deň
+});
 
 
 
@@ -162,6 +165,8 @@ function selectDay(day) {
     $("#day-tabs button").removeClass("active");
     $("#day-tabs button[data-day='" + day + "']").addClass("active"); //prida active class na button na ktory si klikol
 
+    
+
     if (day === "week") {
         showWeek(); //vykresli cely tyzden
     } else {
@@ -170,10 +175,26 @@ function selectDay(day) {
 }
 
 
-async function loadAll() {
+async function loadAll() { 
+    /* pre kazdu restauraciu:
+        1. nacita z local storagu menu pre dany nazov restiky
+        2. ak je z dnesneho dna tak ulozi do menuData
+        3. ak nie je z dnesneho dna alebo nieje v local storage tak zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
+        4. ulozi do local storagu
+        5. po nacitani vsetkych dat vykresli aktualny den
+*/                        
     for (const restaurant of RESTAURANTS) { //preco som nedal ze forEach? Lebo forEach nefunguje s await (by nepockalo), for of funguje
-        const doc = await loadDocument(restaurant.localFile); //nacita lokalny subor do doc
-        menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
+        const saved = loadMenuFromLocalStorage(restaurant.name); //nacita z local storagu menu pre dany nazov restiky
+
+        if(isFromToday(saved)) {
+            menuData[restaurant.name] = saved.items; //ak je z dnesneho dna tak ulozi do menuData
+        } else {
+            const doc = await loadDocument(restaurant.localFile);
+            menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
+            saveMenuToLocalStorage(restaurant.name, menuData[restaurant.name]); //ulozi do local storagu
+        }
+        
+    
     }
     showToday(); //po nacitani vsetkych dat vykresli pondelok
 }
@@ -198,9 +219,24 @@ $("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
 
 
 
+
 $("#day-tabs button").on("click", function () { //pridanie event listenera na kliknutie na buttony
     selectDay($(this).data("day")); //zisti na ktory button si klikol a zavola selectDay s danym dnom
 });
+
+$("#btn-update").on("click", function () { // nové stiahnutie všetkých menu
+    localStorage.clear(); // zmaže uložené dáta, takže loadAll() bude sťahovať nanovo
+    loadAll();
+});
+
+$("#btn-clear").on("click", function () { // vymazanie uložených dát
+    localStorage.clear(); // zmaže uložené dáta z prehliadača
+    RESTAURANTS.forEach(function (restaurant) {
+        delete menuData[restaurant.name]; // zmaže menu aj z pamäte
+    });
+    $("#menu").empty(); // vyčistí stránku
+});
+
 
 
 function showToday() {
