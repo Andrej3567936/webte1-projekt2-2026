@@ -19,6 +19,10 @@
 
 */
 
+const USE_LOCAL = true;
+const PROXY = "";
+
+
 const RESTAURANTS = [ //pole objektov restaUracie
     {
         name: "Eat & Meet",
@@ -97,7 +101,7 @@ function renderDay(items, day) {
         price.append($("<strong></strong>").text(item.price));
 
         if (item.priceISIC && item.priceISIC !== item.price) { // len ak existuje a líši sa od normálnej
-            price.append($("<small class='d-block text-info'></small>").text(item.priceISIC));
+            price.append($("<small class='d-block text-accent'></small>").text(item.priceISIC));
         }
 
         row.append(info, price);
@@ -115,7 +119,7 @@ function renderDay(items, day) {
 
 function renderCard(restaurant, items, day) {
     const col = $("<div class='col-12 col-md-6 col-lg-4'></div>");
-    const card = $("<div class='card h-100'></div>");
+    const card = $("<article class='card h-100'></article>");
 
     const header = $("<div class='card-header'></div>");
     const link = $("<a target='_blank' rel='noopener'></a>");
@@ -124,7 +128,7 @@ function renderCard(restaurant, items, day) {
 
     link.attr("href", restaurant.url).text(restaurant.name); //zretazenie linku a nazvu restiy, pridane do prazdenho prvku link
 
-    header.append($("<h2 class='h5 mb-0'></h2>").append(link)); //vlozi prvok do vnutra na koniec
+    header.append($("<h2 class='h5 mt-2'></h2>").append(link)); //vlozi prvok do vnutra na koniec
     header.append($("<small class='text-body-secondary'></small>").text(restaurant.address));
 
 
@@ -134,7 +138,7 @@ function renderCard(restaurant, items, day) {
 
 
     if (restaurant.note) { // poznámka sa zobrazí len reštauráciám, ktoré ju majú
-        card.append($("<div class='card-footer small text-info'></div>").text(restaurant.note));
+        card.append($("<div class='card-footer small text-accent'></div>").text(restaurant.note));
     }
 
     const saved = loadMenuFromLocalStorage(restaurant.name); //nacita z local storagu menu pre dany nazov restiky
@@ -215,7 +219,7 @@ async function loadAll() {
             menuData[restaurant.name] = saved.items; //ak je z dnesneho dna tak ulozi do menuData
         } else {
             try {
-                const doc = await loadDocument(restaurant.localFile); //nacita html dokument z local file
+                const doc = await loadDocument(USE_LOCAL ? restaurant.localFile : PROXY + restaurant.url); //nacita html dokument z local file
                 const items = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do items
                 if (items.length === 0) {
                     throw new Error("Menu pre " + restaurant.name + " nie je k dispozícii."); //ak je prazdne tak vyhodi chybu
@@ -241,13 +245,13 @@ async function loadAll() {
 
 
 
-    //CHECKBOXESSS
-RESTAURANTS.forEach(function (restaurant) { // pre každú reštauráciu jedno políčko
-    const label = $("<label class='d-flex align-items-center gap-2'></label>");
-    const checkbox = $("<input type='checkbox' class='form-check-input m-0' checked>").val(restaurant.name);
+//CHECKBOXESSS
+RESTAURANTS.forEach(function (restaurant, index) { // index je poradie reštaurácie (0, 1, 2)
+    const id = "filter-" + index; // jedinečné id, ktoré spojí políčko a tlačidlo
+    const checkbox = $("<input type='checkbox' class='btn-check' checked>").attr("id", id).val(restaurant.name);
+    const label = $("<label class='btn btn-outline-secondary'></label>").attr("for", id).text(restaurant.name);
 
-    label.append(checkbox, $("<span></span>").text(restaurant.name));
-    $("#restaurant-filter").append(label);
+    $("#restaurant-filter").append(checkbox, label); // políčko musí byť tesne pred tlačidlom
 });
 
 $("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
@@ -288,7 +292,7 @@ function showToday() {
         $("#weekend-msg").addClass("d-none");
         selectDay(dayNumber); //vykresli dany den
     }
-    
+
 }
 
 loadAll();

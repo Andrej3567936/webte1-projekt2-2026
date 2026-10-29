@@ -1,3 +1,24 @@
+
+
+/* všetky farby stránky na jednom mieste */
+:root {
+    --bg: #17110c;                       /* pozadie stránky (tmavohnedá) */
+    --surface: #392c22;                  /* karty, navbar, footer */
+    --surface-header: #2d2118;           /* hlavička karty */
+    --border: #4a3322;                   /* okraje */
+    --text: #ffffff;                     /* hlavný text */
+    --text-muted: #bfae9f;               /* druhotný text */
+    --accent: #ff8a3d;                   /* oranžová */
+    --accent-hover: #ffa05e;             /* oranžová pri prejdení myšou */
+    --accent-soft: rgba(255, 138, 61, 0.12);   /* jemné pozadie pri hover */
+    --accent-active: rgba(255, 138, 61, 0.25); /* pozadie zvolenej záložky */
+    --on-accent: #1a1a1a;                /* text na oranžovom tlačidle */
+    --hero-end: #17110c;                 /* koniec prechodu bannera */
+
+    --bs-secondary-color: var(--text-muted); /* prepíše sivú farbu v Bootstrape */
+}
+
+ 
 @font-face {
     font-family: "Google Sans";
     src: url("../fonts/google-sans.woff2") format("woff2");
@@ -8,16 +29,108 @@
 
 body {
     font-family: "Google Sans", sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+a { /*odkazy*/
+    color: var(--accent);
+}
+
+a:hover {
+    color: var(--accent-hover);                 /* odkaz sa pri prejdení myšou zosvetlí */
+}
+
+.bg-body-tertiary {
+    background-color: var(--surface) !important; /* zmení pozadie navbaru a footeru na farbu kariet */
+}
+
+
+
+.nav-pills .nav-link {
+    color: var(--text);                         /* text všetkých záložiek je biely */
+}
+
+.nav-pills .nav-link:hover {
+    background-color: var(--accent-soft);       /* pri prejdení myšou sa za záložkou objaví jemný oranžový obdĺžnik */
+}
+
+/* musí byť až pod :hover, aby pri zvolenej záložke vyhralo toto pravidlo */
+.nav-pills .nav-link.active {
+    background-color: var(--accent-active);     /* zvolená záložka má výraznejší obdĺžnik, ale nie plne oranžový */
+}
+
+
+/*tlacidlo aktualizoavt menu*/ 
+
+.btn-primary { /*bootstrap premenne*/
+    --bs-btn-bg: var(--accent);                 /* pozadie tlačidla je oranžové (namiesto modrej) */
+    --bs-btn-border-color: var(--accent);       /* okraj tlačidla je oranžový */
+
+    --bs-btn-color: var(--on-accent);           /* text v tlačidle je tmavý, aby bol čitateľný */
+
+    --bs-btn-hover-bg: var(--accent-hover);     /* pri prejdení myšou sa pozadie zosvetlí */
+    --bs-btn-hover-border-color: var(--accent-hover); /* okraj sa pri hover zosvetlí tiež */
+    --bs-btn-hover-color: var(--on-accent);     /* text pri hover ostane tmavý */
+    
+    --bs-btn-active-bg: var(--accent-hover);    /* farba pozadia v okamihu kliknutia */
+    --bs-btn-active-border-color: var(--accent-hover); /* farba okraja v okamihu kliknutia */
+    --bs-btn-active-color: var(--on-accent);    /* farba textu v okamihu kliknutia */
+}
+
+
+.form-check-input:checked { /*check*/
+    background-color: var(--accent);            /* zaškrtnuté políčko filtra je oranžové (namiesto modrého) */
+    border-color: var(--accent);                /* okraj zaškrtnutého políčka je oranžový */
+}
+
+/* tlačidlá filtra reštaurácií: rovnaký vzhľad ako záložky dní */
+#restaurant-filter .btn {
+    --bs-btn-color: var(--text);                  /* text je biely */
+    --bs-btn-bg: transparent;                     /* v pokoji bez pozadia */
+    --bs-btn-border-color: transparent;           /* žiadny rámček */
+    
+    --bs-btn-active-bg: var(--accent-active);     /* zapnuté tlačidlo má výraznejšie pozadie */
+    --bs-btn-active-border-color: transparent;    /* a stále bez rámčeka */
+    --bs-btn-active-color: var(--text);         /* s oranžovým textom */
+}
+
+/* vypnuté tlačidlo filtra pri prejdení myšou: jemný oranžový obdĺžnik */
+#restaurant-filter .btn-check:not(:checked) + .btn:hover {
+    background-color: var(--accent-soft);
+}
+
+.spinner-border {
+    color: var(--accent);                       /* točiace sa koliesko pri načítavaní je oranžové */
+}
+
+.alert-info {
+    --bs-alert-color: var(--accent);            /* text správy je oranžový (namiesto tyrkysovej) */
+    --bs-alert-bg: var(--accent-soft);          /* pozadie správy je jemne oranžové */
+    --bs-alert-border-color: var(--accent);     /* okraj správy je oranžový */
+}
+
+/*kary restauracii*/
+
+.card {
+    --bs-card-bg: var(--surface);               /* pozadie karty (tmavohnedá) */
+    --bs-card-border-color: var(--border);      /* farba okraja karty */
+    --bs-card-cap-bg: var(--surface-header);    /* pozadie hlavičky aj pätičky karty */
+    border-radius: 12px;                        /* zaoblené rohy karty */
+    overflow: hidden;                           /* obsah karty nevytŕča cez zaoblené rohy */
 }
 
 .card-header a {
-    text-decoration: none; /*nazov rstiky bez podciarknutia*/
+    text-decoration: none;                      /* názov reštaurácie nie je podčiarknutý (farba prichádza z pravidla pre odkazy) */
 }
 
-.card-header a:hover {
-    text-decoration: underline; /*nazov s podciarknutim pri hover*/
+/* zoznam jedál vo vnútri karty */
+.list-group {
+    --bs-list-group-bg: transparent;            /* riadky nemajú vlastné pozadie, vidno farbu karty */
+    --bs-list-group-color: var(--text);         /* text riadkov je biely */
+    --bs-list-group-border-color: var(--on-accent);/* čiary medzi riadkami majú hnedú farbu */
 }
 
-.list-group-item:hover { /*zvirazni jedlo pri hover*/
-    background-color: var(--bs-tertiary-bg);
+.text-accent {
+    color: var(--accent);                       /* oranžový text (ISIC cena a poznámka o dotácii, trieda sa dáva v app.js) */
 }
