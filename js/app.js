@@ -30,14 +30,15 @@ const RESTAURANTS = [ //pole objektov restaUracie
         note: "Cena s dotáciou" // poznámka v pätičke karty
     },
 
-    {   name: "Slovak Pub",
+    {
+        name: "Slovak Pub",
         url: "https://slovakpub.sk/denne-menu/",
         address: "Obchodná 62, Bratislava",
         localFile: "../local/slovakpub.html",
         parse: parseSlovakPub
     },
 
-    {    
+    {
         name: "White Dragon",
         url: "https://whitedragon.sk/menucka/",
         address: "Staré Grunty 18, Bratislava",
@@ -51,7 +52,7 @@ async function loadDocument(url) {
     const response = await fetch(url); //fetch posle http pozioadavku na adresu, kym neodpovie tak caka, stranka zatial bezi nrmalne (asynchronnost) a ked odpovie tak sa ulozi do response
     //fetch vracia promise, await pocka na vysledok
     const html = await response.text(); //caka na staiahnutie tela odpovede
-    
+
     return new DOMParser().parseFromString(html, 'text/html'); //dom parser toto html prevedie z textu na strom kde uz hladame s tym queryselector
 }
 
@@ -66,7 +67,7 @@ $("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
 function renderDay(items, day) {
     const dayItems = items.filter(function (item) {
         return item.day === day;
-    });  
+    });
 
     const list = $("<ul class='list-group list-group-flush'></ul>"); //vytvori novy element
     //obe triedy su bootstrapove, list-gropu spravi pekny zoznam s okrajmi, list-group-flush odstrani okraje medzi jednotlivymi polozkami aby boli epkne na stranke
@@ -76,7 +77,7 @@ function renderDay(items, day) {
 
         const info = $("<div></div>"); //prazdny div element info 
         const isSoup = item.type.toLowerCase().includes("polievka"); //vrati true ak ma div slovo polievka
-        const badge = $("<span class='badge me-2'></span>").addClass(isSoup ? "text-bg-warning" : "text-bg-secondary").text(item.type); 
+        const badge = $("<span class='badge me-2'></span>").addClass(isSoup ? "text-bg-warning" : "text-bg-secondary").text(item.type);
         const name = $("<span></span>").text(item.name);
 
         info.append(badge, name); //prida do info badge a name
@@ -95,7 +96,7 @@ function renderDay(items, day) {
         row.append(info, price);
         list.append(row);
 
-    
+
     });
 
     return list;
@@ -111,16 +112,30 @@ function renderCard(restaurant, items, day) {
 
     const header = $("<div class='card-header'></div>");
     const link = $("<a target='_blank' rel='noopener'></a>");
+
+
+
     link.attr("href", restaurant.url).text(restaurant.name); //zretazenie linku a nazvu restiy, pridane do prazdenho prvku link
 
     header.append($("<h2 class='h5 mb-0'></h2>").append(link)); //vlozi prvok do vnutra na koniec
     header.append($("<small class='text-body-secondary'></small>").text(restaurant.address));
 
+    
+
     card.append(header, renderDay(items, day));
+
+    
 
     if (restaurant.note) { // poznámka sa zobrazí len reštauráciám, ktoré ju majú
         card.append($("<div class='card-footer small text-info'></div>").text(restaurant.note));
     }
+    
+    const saved = loadMenuFromLocalStorage(restaurant.name); //nacita z local storagu menu pre dany nazov restiky
+    if (saved) {
+        card.append($("<div class='card-footer small text-body-secondary'></div>").text("Posledná aktualizácia: " + saved.date + " " + saved.time));
+    }
+
+
     col.append(card);
     return col;
 }
@@ -165,7 +180,7 @@ function selectDay(day) {
     $("#day-tabs button").removeClass("active");
     $("#day-tabs button[data-day='" + day + "']").addClass("active"); //prida active class na button na ktory si klikol
 
-    
+
 
     if (day === "week") {
         showWeek(); //vykresli cely tyzden
@@ -175,27 +190,33 @@ function selectDay(day) {
 }
 
 
-async function loadAll() { 
+async function loadAll() {
     /* pre kazdu restauraciu:
         1. nacita z local storagu menu pre dany nazov restiky
         2. ak je z dnesneho dna tak ulozi do menuData
         3. ak nie je z dnesneho dna alebo nieje v local storage tak zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
         4. ulozi do local storagu
         5. po nacitani vsetkych dat vykresli aktualny den
-*/                        
+*/
+
+    $("#loading").removeClass("d-none"); //zobrazi loading spinner
+
     for (const restaurant of RESTAURANTS) { //preco som nedal ze forEach? Lebo forEach nefunguje s await (by nepockalo), for of funguje
         const saved = loadMenuFromLocalStorage(restaurant.name); //nacita z local storagu menu pre dany nazov restiky
 
-        if(isFromToday(saved)) {
+        if (isFromToday(saved)) {
             menuData[restaurant.name] = saved.items; //ak je z dnesneho dna tak ulozi do menuData
         } else {
             const doc = await loadDocument(restaurant.localFile);
             menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
             saveMenuToLocalStorage(restaurant.name, menuData[restaurant.name]); //ulozi do local storagu
         }
-        
-    
+
+
     }
+
+    $("#loading").addClass("d-none"); //skryje loading spinner
+
     showToday(); //po nacitani vsetkych dat vykresli pondelok
 }
 
@@ -242,11 +263,11 @@ $("#btn-clear").on("click", function () { // vymazanie uložených dát
 function showToday() {
     const dayNumber = new Date().getDay(); //vrati cislo dna v tyzdni (0-6) 0 je nedela, 1 je pondelok, 2 utorok, 3 streda, 4 stvrtok, 5 piatok, 6 sobota
     if (dayNumber === 0 || dayNumber === 6) { //ak je sobota alebo nedela
-        
+
         $("#weekend-msg").removeClass("d-none");
         selectDay(1); //vykresli pondelok
     } else {
-       
+
         $("#weekend-msg").addClass("d-none");
         selectDay(dayNumber); //vykresli dany den
     }
