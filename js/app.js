@@ -1,4 +1,25 @@
-const RESTAURANTS = [
+
+/* JQUERY
+    $
+    hladame prfky": id -> $("#menu"), $("#days-tabs button")
+    vytvarame prvky: $("<div></div>"), $("<h2></h2>")
+    uprava textu: 
+                <.append("text"), .append($("<h2></h2>").text("text")), 
+
+    treidy a atributy: 
+        .addClass("class"), .removeClass("class"), .toggleClass("class")
+        .attr("href", "url"), .val("value") - zisti hodnotu value atributu
+        .data("day") - zisti hodnotu data-day atributu
+
+    udalosti:
+        .on("click", function() { ... }), .on("change", function() { ... })
+
+
+
+
+*/
+
+const RESTAURANTS = [ //pole objektov restaUracie
     {
         name: "Eat & Meet",
         url: "https://eatandmeet.sk/tyzdenne-menu",
@@ -16,7 +37,7 @@ const RESTAURANTS = [
         parse: parseSlovakPub
     },
 
-    {
+    {    
         name: "White Dragon",
         url: "https://whitedragon.sk/menucka/",
         address: "Staré Grunty 18, Bratislava",
@@ -35,10 +56,6 @@ async function loadDocument(url) {
 }
 
 
-$("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
-    selectDay($("#day-tabs button.active").data("day")); // prekreslí aktuálne vybraný deň
-});
-
 
 
 
@@ -46,14 +63,15 @@ $("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
 function renderDay(items, day) {
     const dayItems = items.filter(function (item) {
         return item.day === day;
-    });
+    });  
 
     const list = $("<ul class='list-group list-group-flush'></ul>"); //vytvori novy element
+    //obe triedy su bootstrapove, list-gropu spravi pekny zoznam s okrajmi, list-group-flush odstrani okraje medzi jednotlivymi polozkami aby boli epkne na stranke
 
     dayItems.forEach(function (item) {
         const row = $("<li class='list-group-item d-flex justify-content-between gap-2'></li>");
 
-        const info = $("<div></div>"); //prazdny div element info (bude tu nazov asi)
+        const info = $("<div></div>"); //prazdny div element info 
         const isSoup = item.type.toLowerCase().includes("polievka"); //vrati true ak ma div slovo polievka
         const badge = $("<span class='badge me-2'></span>").addClass(isSoup ? "text-bg-warning" : "text-bg-secondary").text(item.type); 
         const name = $("<span></span>").text(item.name);
@@ -80,10 +98,6 @@ function renderDay(items, day) {
     return list;
 
 }
-
-
-
-
 
 
 
