@@ -9,3 +9,15 @@
 body {
     font-family: "Google Sans", sans-serif;
 }
+
+.card-header a {
+    text-decoration: none; /*nazov rstiky bez podciarknutia*/
+}
+
+.card-header a:hover {
+    text-decoration: underline; /*nazov s podciarknutim pri hover*/
+}
+
+.list-group-item:hover { /*zvirazni jedlo pri hover*/
+    background-color: var(--bs-tertiary-bg);
+}
