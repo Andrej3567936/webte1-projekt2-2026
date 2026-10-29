@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sk" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O projekte | Where2Eat</title>
+    <link rel="icon" type="image/png" href="../favicon_p.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+        <main class="container my-4">
+        <h1 class="h2 mb-3">O projekte</h1>
+
+        <!-- navigácia po sekciách stránky (nečíslovaný zoznam) -->
+        <nav aria-label="Obsah stránky" class="mb-4">
+            <ul>
+                <li><a href="#zdroje">Zdroje dát</a></li>
+                <li><a href="#spracovanie">Spracovanie dát</a></li>
+                <li><a href="#kniznice">Použité knižnice</a></li>
+                <li><a href="../index.html">Späť na menu</a></li>
+            </ul>
+        </nav>
+
+        <section id="zdroje" class="mb-4">
+            <h2 class="h4">Zdroje dát</h2>
+            <ul>
+                <li><a href="https://eatandmeet.sk/tyzdenne-menu" target="_blank" rel="noopener">Eat &amp; Meet</a></li>
+                <li><a href="https://slovakpub.sk/denne-menu/" target="_blank" rel="noopener">Slovak Pub</a></li>
+                <li><a href="https://whitedragon.sk/menucka/" target="_blank" rel="noopener">White Dragon</a></li>
+            </ul>
+        </section>
+
+        <section id="spracovanie" class="mb-4">
+            <h2 class="h4">Spracovanie dát</h2>
+            <p>Stránka stiahne HTML každej reštaurácie funkciou <code>fetch</code> a prevedie ho na dokument pomocou <code>DOMParser</code>. Jedlá sa z neho vyberajú cez <code>querySelector</code>. Každá reštaurácia má vlastný parser, ktorý z jej stránky vyrobí rovnaké objekty (reštaurácia, deň, typ, názov, cena, alergény), takže ich možno zobraziť rovnakým spôsobom.</p>
+            <p>Spracované dáta sa ukladajú do <code>localStorage</code>. Ak sú z aktuálneho dňa, stránky reštaurácií sa znova nesťahujú. Tlačidlo „Aktualizovať menu“ načíta dáta nanovo a druhé tlačidlo uložené dáta vymaže.</p>
+        </section>
+
+        <section id="kniznice" class="mb-4">
+            <h2 class="h4">Použité knižnice</h2>
+            <ul>
+                <li>Bootstrap 5.3.3 (CSS aj JS): rozloženie, karty, navigácia</li>
+                <li>jQuery 3.7.1: práca s DOM a udalosťami</li>
+                <li>Font Google Sans (lokálne, licencia v README)</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-body-tertiary py-3 mt-5">
+        <div class="container text-center small">
+            <p class="mb-0">&copy; 2026 Andrej Hudačko</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
