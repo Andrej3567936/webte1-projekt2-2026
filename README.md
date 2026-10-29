@@ -21,4 +21,4 @@ Where2Eat je webová stránka, ktorá na jednom mieste zobrazuje denné menu re�
 **Font:** Google Sans (lokálne, formát woff2). Zdroj: https://fonts.google.com/selection
 
 **Použitie AI**
-Ai som pouzil najmä pri práci v JS, kedže ma tam čakalo veľa nových vecí. Slížil mi ako mentor a navigoval ma pri práci, ukazoval čo je potrebné vedieť a učil nové veci. Nepracoval som štýlom copy-paste, ale snažil som sa nové veci poochopiť a implementovať sám. Taktiež mi uľahčil prácu s generovaním mne už známych vecí ako časti html kódu a implementáciu nových knižníc Bootstrap a JQuery. Na záver mi pomohlo upratať celý kod. Používal som najmä Claude a GitHub Copilot.
+Ai som pouzil najmä pri práci v JS, kedže ma tam čakalo veľa nových vecí. Slížil mi ako mentor a navigoval ma pri práci, ukazoval čo je potrebné vedieť a učil nové veci. Nepracoval som štýlom copy-paste, ale snažil som sa nové veci pochopiť a implementovať sám. Taktiež mi uľahčil prácu s generovaním mne už známych vecí ako časti html kódu a implementáciu nových knižníc Bootstrap a JQuery. Na záver mi pomohlo upratať celý kod. Používal som najmä Claude a GitHub Copilot.

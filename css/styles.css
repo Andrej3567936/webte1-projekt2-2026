@@ -13,7 +13,6 @@
     --accent-soft: rgba(255, 138, 61, 0.12);   /* jemné pozadie pri hover */
     --accent-active: rgba(255, 138, 61, 0.25); /* pozadie zvolenej záložky */
     --on-accent: #1a1a1a;                /* text na oranžovom tlačidle */
-    --hero-end: #17110c;                 /* koniec prechodu bannera */
 
     --bs-secondary-color: var(--text-muted); /* prepíše sivú farbu v Bootstrape */
 }
@@ -61,6 +60,10 @@ a:hover {
 }
 
 
+/* tlačidlo dnešného dňa: oranžový text, ak nie je práve zvolené */
+.nav-pills .nav-link.today {
+    color: var(--accent);
+}
 /*tlacidlo aktualizoavt menu*/ 
 
 .btn-primary { /*bootstrap premenne*/
@@ -79,13 +82,15 @@ a:hover {
 }
 
 
+
 .form-check-input:checked { /*check*/
     background-color: var(--accent);            /* zaškrtnuté políčko filtra je oranžové (namiesto modrého) */
     border-color: var(--accent);                /* okraj zaškrtnutého políčka je oranžový */
 }
 
-/* tlačidlá filtra reštaurácií: rovnaký vzhľad ako záložky dní */
-#restaurant-filter .btn {
+/* tlačidlá filtra reštaurácií a prepínača LIVE / LOCAL: rovnaký vzhľad ako záložky dní */
+#restaurant-filter .btn,
+#source-switch .btn {
     --bs-btn-color: var(--text);                  /* text je biely */
     --bs-btn-bg: transparent;                     /* v pokoji bez pozadia */
     --bs-btn-border-color: transparent;           /* žiadny rámček */
@@ -96,8 +101,21 @@ a:hover {
 }
 
 /* vypnuté tlačidlo filtra pri prejdení myšou: jemný oranžový obdĺžnik */
-#restaurant-filter .btn-check:not(:checked) + .btn:hover {
+#restaurant-filter .btn-check:not(:checked) + .btn:hover,
+#source-switch .btn-check:not(:checked) + .btn:hover {
     background-color: var(--accent-soft);
+}
+
+/* tmavý obdĺžnik okolo prepínača LIVE / LOCAL */
+#source-switch {
+    background-color: var(--surface-header);
+    border-radius: var(--bs-border-radius);
+}
+
+/* väčšie odsadenie vnútri tlačidiel prepínača (na mobile ho prepíše pravidlo nižšie) */
+#source-switch .btn {
+    --bs-btn-padding-y: 0.6rem;                 /* zvislé odsadenie */
+    --bs-btn-padding-x: 1.5rem;                 /* vodorovné odsadenie */
 }
 
 .spinner-border {
@@ -133,4 +151,22 @@ a:hover {
 
 .text-accent {
     color: var(--accent);                       /* oranžový text (ISIC cena a poznámka o dotácii, trieda sa dáva v app.js) */
+}
+
+@media (max-width: 576px) {
+    .nav-pills .nav-link {
+        padding: 0.4rem 0.6rem;                 /* menšie odsadenie v záložkách dní */
+        font-size: 0.95rem;                     /* o niečo menšie písmo */
+    }
+
+    #restaurant-filter .btn,
+    #source-switch .btn {
+        --bs-btn-padding-y: 0.4rem;             /* menšie zvislé odsadenie tlačidiel filtra */
+        --bs-btn-padding-x: 0.6rem;             /* menšie vodorovné odsadenie tlačidiel filtra */
+        --bs-btn-font-size: 0.95rem;            /* menšie písmo tlačidiel filtra */
+    }
+
+    h1 {
+        font-size: 1.5rem;                      /* menší hlavný nadpis */
+    }
 }

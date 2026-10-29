@@ -28,7 +28,6 @@ function parseEatAndMeet(doc) { //ideme tahat zo stranky eat n meet odaje o jedl
             const allergens = allergensSpan ? allergensSpan.textContent.replace(/[()]/g, "") : "";
 
             
-            console.log(DAYS[dayNumber - 1], type, name, priceNormal, priceISIC, allergens); //testoval som na tomto v konzoole
             
             items.push({ //push priuda na koneic pola prvok
                 restaurant: "Eat & Meet",

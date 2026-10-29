@@ -19,7 +19,7 @@
 
 */
 
-const USE_LOCAL = true;
+let USE_LOCAL = true;
 const PROXY = "";
 
 
@@ -28,7 +28,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
         name: "Eat & Meet",
         url: "https://eatandmeet.sk/tyzdenne-menu",
         address: "Staré Grunty 36, Bratislava",
-        localFile: "../local/eatnmeet.html",
+        localFile: "local/eatnmeet.html",
         parse: parseEatAndMeet, //ukladas tu samotnu funkciu, niee jej vysledok preto bez zatvoriek
         //je to len odkaz na funkciu 
         note: "Cena s dotáciou" // poznámka v pätičke karty
@@ -38,7 +38,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
         name: "Slovak Pub",
         url: "https://slovakpub.sk/denne-menu/",
         address: "Obchodná 62, Bratislava",
-        localFile: "../local/slovakpub.html",
+        localFile: "local/slovakpub.html",
         parse: parseSlovakPub
     },
 
@@ -46,7 +46,7 @@ const RESTAURANTS = [ //pole objektov restaUracie
         name: "White Dragon",
         url: "https://whitedragon.sk/menucka/",
         address: "Staré Grunty 18, Bratislava",
-        localFile: "../local/whitedragon.html",
+        localFile: "local/whitedragon.html",
         parse: parseWhiteDragon
     }
 ]
@@ -280,6 +280,13 @@ $("#btn-clear").on("click", function () { // vymazanie uložených dát
 });
 
 
+$("#source-switch input").on("change", function () { // prepínač LIVE / LOCAL
+    USE_LOCAL = this.value === "local"; // hodnota zvoleného radio tlačidla
+    localStorage.clear();               // zmaže uložené dáta, aby sa menu stiahlo z nového zdroja
+    loadAll();
+});
+
+
 
 function showToday() {
     const dayNumber = new Date().getDay(); //vrati cislo dna v tyzdni (0-6) 0 je nedela, 1 je pondelok, 2 utorok, 3 streda, 4 stvrtok, 5 piatok, 6 sobota
@@ -290,6 +297,7 @@ function showToday() {
     } else {
 
         $("#weekend-msg").addClass("d-none");
+        $("#day-tabs button[data-day='" + dayNumber + "']").addClass("today"); // označí tlačidlo dnešného dňa
         selectDay(dayNumber); //vykresli dany den
     }
 
