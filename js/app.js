@@ -237,7 +237,7 @@ async function loadAll() {
     showToday(); //po nacitani vsetkych dat vykresli pondelok
 }
 
-loadAll();
+
 
 
 
@@ -290,3 +290,5 @@ function showToday() {
     }
     
 }
+
+loadAll();
