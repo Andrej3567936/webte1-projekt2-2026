@@ -51,6 +51,9 @@ const RESTAURANTS = [ //pole objektov restaUracie
 async function loadDocument(url) {
     const response = await fetch(url); //fetch posle http pozioadavku na adresu, kym neodpovie tak caka, stranka zatial bezi nrmalne (asynchronnost) a ked odpovie tak sa ulozi do response
     //fetch vracia promise, await pocka na vysledok
+    if (!response.ok) { //ak je odpoved zla (404) tak vyhodi chybu
+        throw new Error("Chyba: " + response.status);
+    }
     const html = await response.text(); //caka na staiahnutie tela odpovede
 
     return new DOMParser().parseFromString(html, 'text/html'); //dom parser toto html prevedie z textu na strom kde uz hladame s tym queryselector
@@ -68,6 +71,10 @@ function renderDay(items, day) {
     const dayItems = items.filter(function (item) {
         return item.day === day;
     });
+
+    if (dayItems.length === 0) {
+        return $("<p class='card-body mb-0 text-body-secondary'></p>").text("Menu pre tento deň nie je k dispozícii.");
+    }
 
     const list = $("<ul class='list-group list-group-flush'></ul>"); //vytvori novy element
     //obe triedy su bootstrapove, list-gropu spravi pekny zoznam s okrajmi, list-group-flush odstrani okraje medzi jednotlivymi polozkami aby boli epkne na stranke
@@ -120,16 +127,16 @@ function renderCard(restaurant, items, day) {
     header.append($("<h2 class='h5 mb-0'></h2>").append(link)); //vlozi prvok do vnutra na koniec
     header.append($("<small class='text-body-secondary'></small>").text(restaurant.address));
 
-    
+
 
     card.append(header, renderDay(items, day));
 
-    
+
 
     if (restaurant.note) { // poznámka sa zobrazí len reštauráciám, ktoré ju majú
         card.append($("<div class='card-footer small text-info'></div>").text(restaurant.note));
     }
-    
+
     const saved = loadMenuFromLocalStorage(restaurant.name); //nacita z local storagu menu pre dany nazov restiky
     if (saved) {
         card.append($("<div class='card-footer small text-body-secondary'></div>").text("Posledná aktualizácia: " + saved.date + " " + saved.time));
@@ -207,12 +214,22 @@ async function loadAll() {
         if (isFromToday(saved)) {
             menuData[restaurant.name] = saved.items; //ak je z dnesneho dna tak ulozi do menuData
         } else {
-            const doc = await loadDocument(restaurant.localFile);
-            menuData[restaurant.name] = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do menuData pod nazvom restiky
-            saveMenuToLocalStorage(restaurant.name, menuData[restaurant.name]); //ulozi do local storagu
+            try {
+                const doc = await loadDocument(restaurant.localFile); //nacita html dokument z local file
+                const items = restaurant.parse(doc); //zavola parse funkciu a ulozi vysledok do items
+                if (items.length === 0) {
+                    throw new Error("Menu pre " + restaurant.name + " nie je k dispozícii."); //ak je prazdne tak vyhodi chybu
+                }
+                menuData[restaurant.name] = items; //ulozi do menuData pod nazvom restiky
+                saveMenuToLocalStorage(restaurant.name, items); //ulozi do local storagu
+            }
+            catch (error) {
+                console.error(restaurant.name, error);
+                menuData[restaurant.name] = [];
+            }
+
+
         }
-
-
     }
 
     $("#loading").addClass("d-none"); //skryje loading spinner
@@ -224,7 +241,7 @@ loadAll();
 
 
 
-//CHECKBOXESSS
+    //CHECKBOXESSS
 RESTAURANTS.forEach(function (restaurant) { // pre každú reštauráciu jedno políčko
     const label = $("<label class='d-flex align-items-center gap-2'></label>");
     const checkbox = $("<input type='checkbox' class='form-check-input m-0' checked>").val(restaurant.name);
@@ -271,4 +288,5 @@ function showToday() {
         $("#weekend-msg").addClass("d-none");
         selectDay(dayNumber); //vykresli dany den
     }
+    
 }
