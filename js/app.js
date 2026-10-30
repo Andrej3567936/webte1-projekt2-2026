@@ -63,9 +63,6 @@ async function loadDocument(url) {
     return new DOMParser().parseFromString(html, 'text/html'); //dom parser toto html prevedie z textu na strom kde uz hladame s tym queryselector
 }
 
-$("#restaurant-filter input").on("change", function () { // zmena zaškrtnutia
-    selectDay($("#day-tabs button.active").data("day")); // prekreslí aktuálne vybraný deň
-});
 
 
 
@@ -80,7 +77,7 @@ function renderDay(items, day) {
         return $("<p class='card-body mb-0 text-body-secondary'></p>").text("Menu pre tento deň nie je k dispozícii.");
     }
 
-    const list = $("<ul class='list-group list-group-flush'></ul>"); //vytvori novy element
+    const list = $("<ul class='list-group list-group-flush'></ul>"); //vytvori novy element list-jendotlive jedloi
     //obe triedy su bootstrapove, list-gropu spravi pekny zoznam s okrajmi, list-group-flush odstrani okraje medzi jednotlivymi polozkami aby boli epkne na stranke
 
     dayItems.forEach(function (item) {
